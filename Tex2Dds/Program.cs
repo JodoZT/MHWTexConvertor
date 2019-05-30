@@ -93,9 +93,9 @@ namespace Tex2Dds
                             compresstype = "DXT1_";
                             break;
                         case 0x18:
-                            internalFormat = 0x83F2; //DXT3
-                            typeMagic = "DXT3";
-                            compresstype = "DXT3_";
+                            internalFormat = 0x8DBB; //BC4U
+                            typeMagic = "BC4U";
+                            compresstype = "BC4_";
                             break;
                         case 0x1A:
                             internalFormat = 0x8DBD; // COMPRESSED_RG_RGTC2
@@ -127,6 +127,8 @@ namespace Tex2Dds
                         return -5;
                     }
                     string outfile_name = compresstype + Path.GetFileName(args[0]);
+                    //string outfile_name = Path.GetFileName(args[0]);
+
                     string destPath = Path.GetFullPath(Path.ChangeExtension(Path.GetDirectoryName(args[0]) + "\\" + outfile_name, ".dds"));
                     Directory.CreateDirectory(Path.GetDirectoryName(destPath));
                     byte[] data;
@@ -183,6 +185,7 @@ namespace Tex2Dds
                 Directory.CreateDirectory(Path.GetDirectoryName(destPath));
                 FileInfo destFile = new FileInfo(destPath);
                 if (destFile.Exists) {
+                    if (File.Exists(destPath + ".old")) File.Delete(destPath + ".old");
                     Directory.Move(destPath, destPath + ".old");
                 }
                 using (BinaryReader reader = new BinaryReader(File.OpenRead(args[0])))
@@ -212,7 +215,7 @@ namespace Tex2Dds
                         case 0x31545844:
                             filetype = 0x17;
                             break;
-                        case 0x33545844:
+                        case 0x55344342:
                             filetype = 0x18;
                             break;
                         case 0x55354342:
