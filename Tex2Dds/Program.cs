@@ -19,7 +19,7 @@ namespace Tex2Dds
         const string Empty6 = "000000000000000000000000000000000000000000000000";
         const string Empty11 = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
         const string bc7Num = "6300000003000000000000000100000000000000";
-        const string bc6hNum = "6300000003000000000000000100000000000000";
+        const string bc6hNum = "5f00000003000000000000000100000000000000";
         const string FF4 = "FFFFFFFF";
         const string FF40 = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
         const string TexSolid = "01000000000000000000000000000000FFFFFFFF0000000000000000";
@@ -165,7 +165,7 @@ namespace Tex2Dds
                             if (typeMagic.Equals("DX10"))
                             {
                                 string ArbNum = bc7Num;
-                                if (internalFormat == 0x83f3)
+                                if (internalFormat == 0x8e8f)
                                 {
                                     ArbNum = bc6hNum;
                                 }
