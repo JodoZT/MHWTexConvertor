@@ -20,6 +20,7 @@ namespace Tex2Dds
         const string Empty11 = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
         const string bc7Num = "6300000003000000000000000100000000000000";
         const string bc6hNum = "5f00000003000000000000000100000000000000";
+        const string rgbaNum = "5700000003000000000000000100000000000000";
         const string FF4 = "FFFFFFFF";
         const string FF40 = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
         const string TexSolid = "01000000000000000000000000000000FFFFFFFF0000000000000000";
@@ -105,7 +106,6 @@ namespace Tex2Dds
                                 internalFormat = 0x8E8F;
                                 typeMagic = "DX10";
                                 compresstype = "BC6H_";
-
                                 break;
                             case 0x1d:
                             case 0x1e:
@@ -113,6 +113,11 @@ namespace Tex2Dds
                                 internalFormat = 0x8E8C; // COMPRESSED_RGBA_BPTC_UNORM_ARB
                                 typeMagic = "DX10";
                                 compresstype = "BC7_";
+                                break;
+                            case 0x7:
+                                internalFormat = 0x57; // DXGI_FORMAT_B8G8R8A8_UNORM,
+                                typeMagic = "DX10";
+                                compresstype = "R8G8B8A8_";
                                 break;
                             default:
                                 internalFormat = 0;
@@ -168,6 +173,9 @@ namespace Tex2Dds
                                 if (internalFormat == 0x8e8f)
                                 {
                                     ArbNum = bc6hNum;
+                                }
+                                else if (internalFormat == 0x57) {
+                                    ArbNum = rgbaNum;
                                 }
                                 byte[] ArbNumByte = Program.StringToByteArray(ArbNum);
                                 fsWrite.Write(ArbNumByte, 0, ArbNumByte.Length);
@@ -229,7 +237,7 @@ namespace Tex2Dds
 
                         if (filetype == 0)
                         {
-                            Console.Error.WriteLine("ERROR: Unknown DDS format {0}. " + arg, filetypecode);
+                            Console.Error.WriteLine("ERROR: Unsupported DDS format {0}. " + arg, filetypecode);
                             Console.ReadLine();
                             continue;
                         }
