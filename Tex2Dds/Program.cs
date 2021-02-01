@@ -20,7 +20,7 @@ namespace Tex2Dds
         enum MHW_TEX_FORMAT{
             DXGI_FORMAT_UNKNOWN = 0,
             DXGI_FORMAT_R8G8B8A8_UNORM = 7,
-            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,
+            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,//Not sure. The textures are weird.
             DXGI_FORMAT_BC1_UNORM = 22,
             DXGI_FORMAT_BC1_UNORM_SRGB = 23,
             DXGI_FORMAT_BC4_UNORM = 24,
@@ -403,13 +403,16 @@ namespace Tex2Dds
                             fsWrite.Write(Program.intToBytesLittle(0, 4), 0, 4 * 4);
                             fsWrite.Write(Program.intToBytesLittle(-1, 8), 0, 4 * 8);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 4);
-                            fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
+                            if(isRaw) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
+                            else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(0, 2), 0, 4 * 2);
-                            fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
+                            if (isRaw) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
+                            else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(0, 2), 0, 4 * 2);
-                            fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
+                            if (isRaw) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
+                            else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(0, 8), 0, 4 * 8);
                             int cur_width = width;
@@ -420,9 +423,13 @@ namespace Tex2Dds
                             {
                                 fsWrite.Write(Program.intToBytesLittle(base_loc), 0, 4);
                                 fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
+                                int maxWidth = isRaw ? 2 : 4;
                                 if (TexWith4Bpp.Contains(texformat))
                                 {
                                     base_loc = base_loc + cur_width * cur_height / 2;
+                                }
+                                else if (isRaw) {
+                                    base_loc = base_loc + cur_width * cur_height * 4;
                                 }
                                 else
                                 {
@@ -430,8 +437,9 @@ namespace Tex2Dds
                                 }
                                 cur_width = cur_width / 2;
                                 cur_height = cur_height / 2;
-                                cur_width = cur_width > 4 ? cur_width : 4;
-                                cur_height = cur_height > 4 ? cur_height : 4;
+                                
+                                cur_width = cur_width > maxWidth ? cur_width : maxWidth;
+                                cur_height = cur_height > maxWidth ? cur_height : maxWidth;
                             }
                             fsWrite.Write(data, 0, data.Length);
                         }
