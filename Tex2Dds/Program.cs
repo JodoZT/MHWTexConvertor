@@ -11,7 +11,6 @@ namespace Tex2Dds
         const int MagicNumberTex = 0x00584554;
         const int MagicNumberDds = 0x20534444;
         const string WMagicNumberDds = "444453207C00000007100A00";
-        const string WMagicNumberRawDds = "444453207C0000000F100200";
         const string WMagicNumberTex = "5445580010000000000000000000000002000000";
         const string CompressOption = "08104000";
         const string dx10FixedFlags = "03000000000000000100000000000000";
@@ -21,12 +20,12 @@ namespace Tex2Dds
             DXGI_FORMAT_UNKNOWN = 0,
             DXGI_FORMAT_R8G8B8A8_UNORM = 7,
             DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,//Not sure. The textures are weird.
+            DXGI_FORMAT_R8_UNORM = 19,
             DXGI_FORMAT_BC1_UNORM = 22,
             DXGI_FORMAT_BC1_UNORM_SRGB = 23,
             DXGI_FORMAT_BC4_UNORM = 24,
             DXGI_FORMAT_BC5_UNORM = 26,
             DXGI_FORMAT_BC6H_UF16 = 28,
-            DXGI_FORMAT_BC7_TYPELESS = 29,
             DXGI_FORMAT_BC7_UNORM = 30,
             DXGI_FORMAT_BC7_UNORM_SRGB = 31,
             }
@@ -159,14 +158,14 @@ namespace Tex2Dds
 
         static Dictionary<MHW_TEX_FORMAT, string> FormatTagMap = new Dictionary<MHW_TEX_FORMAT, string>() {
             {MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN, "UNKN_"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "RGB_"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "SRGB_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "R8G8B8_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "SR8G8B8_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8_UNORM, "R8_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM,"DXT1L_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB,"BC1S_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM, "BC4_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC5_UNORM, "BC5_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16, "BC6_"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_TYPELESS, "BC7T_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, "BC7L_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, "BC7S_"}
         };
@@ -175,18 +174,18 @@ namespace Tex2Dds
             {MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN, "UNKN"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8_UNORM, "DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM,"DXT1"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB,"DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM, "BC4U"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC5_UNORM, "BC5U"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16, "DX10"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_TYPELESS, "DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, "DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, "DX10"}
         };
 
         static List<MHW_TEX_FORMAT> TexWith4Bpp = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM };
-        static List<MHW_TEX_FORMAT> TexOfNewDDS = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC7_TYPELESS, MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16 };
+        static List<MHW_TEX_FORMAT> TexOfNewDDS = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16 };
 
         static int Main(string[] args)
         {
@@ -361,7 +360,7 @@ namespace Tex2Dds
                             case 0x55344342:
                                 texformat = MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM;
                                 break;
-                            //DXT5 BC5U
+                            //ATI2 BC5U
                             case 0x55354342:
                             case 0x32495441:
                                 texformat = MHW_TEX_FORMAT.DXGI_FORMAT_BC5_UNORM;
@@ -403,15 +402,16 @@ namespace Tex2Dds
                             fsWrite.Write(Program.intToBytesLittle(0, 4), 0, 4 * 4);
                             fsWrite.Write(Program.intToBytesLittle(-1, 8), 0, 4 * 8);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 4);
-                            if(isRaw) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
+                            bool isFullWidth = isRaw || texformat == MHW_TEX_FORMAT.DXGI_FORMAT_R8_UNORM;
+                            if(isFullWidth) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(0, 2), 0, 4 * 2);
-                            if (isRaw) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
+                            if (isFullWidth) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(0, 2), 0, 4 * 2);
-                            if (isRaw) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
+                            if (isFullWidth) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(0, 8), 0, 4 * 8);
