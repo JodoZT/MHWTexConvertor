@@ -11,19 +11,182 @@ namespace Tex2Dds
         const int MagicNumberTex = 0x00584554;
         const int MagicNumberDds = 0x20534444;
         const string WMagicNumberDds = "444453207C00000007100A00";
+        const string WMagicNumberRawDds = "444453207C0000000F100200";
         const string WMagicNumberTex = "5445580010000000000000000000000002000000";
         const string CompressOption = "08104000";
-        const string Empty2 = "0000000000000000";
-        const string Empty4 = "00000000000000000000000000000000";
-        const string Empty5 = "0000000000000000000000000000000000000000";
-        const string Empty6 = "000000000000000000000000000000000000000000000000";
-        const string Empty11 = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-        const string bc7Num = "6300000003000000000000000100000000000000";
-        const string bc6hNum = "5f00000003000000000000000100000000000000";
-        const string rgbaNum = "5700000003000000000000000100000000000000";
-        const string FF4 = "FFFFFFFF";
-        const string FF40 = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
-        const string TexSolid = "01000000000000000000000000000000FFFFFFFF0000000000000000";
+        const string dx10FixedFlags = "03000000000000000100000000000000";
+        const string TexFixedUnkn = "01000000000000000000000000000000FFFFFFFF0000000000000000";
+
+        enum MHW_TEX_FORMAT{
+            DXGI_FORMAT_UNKNOWN = 0,
+            DXGI_FORMAT_R8G8B8A8_UNORM = 7,
+            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,
+            DXGI_FORMAT_BC1_UNORM = 22,
+            DXGI_FORMAT_BC1_UNORM_SRGB = 23,
+            DXGI_FORMAT_BC4_UNORM = 24,
+            DXGI_FORMAT_BC5_UNORM = 26,
+            DXGI_FORMAT_BC6H_UF16 = 28,
+            DXGI_FORMAT_BC7_TYPELESS = 29,
+            DXGI_FORMAT_BC7_UNORM = 30,
+            DXGI_FORMAT_BC7_UNORM_SRGB = 31,
+            }
+
+        enum DXGI_FORMAT
+        {
+            DXGI_FORMAT_UNKNOWN,
+            DXGI_FORMAT_R32G32B32A32_TYPELESS,
+            DXGI_FORMAT_R32G32B32A32_FLOAT,
+            DXGI_FORMAT_R32G32B32A32_UINT,
+            DXGI_FORMAT_R32G32B32A32_SINT,
+            DXGI_FORMAT_R32G32B32_TYPELESS,
+            DXGI_FORMAT_R32G32B32_FLOAT,
+            DXGI_FORMAT_R32G32B32_UINT,
+            DXGI_FORMAT_R32G32B32_SINT,
+            DXGI_FORMAT_R16G16B16A16_TYPELESS,
+            DXGI_FORMAT_R16G16B16A16_FLOAT,
+            DXGI_FORMAT_R16G16B16A16_UNORM,
+            DXGI_FORMAT_R16G16B16A16_UINT,
+            DXGI_FORMAT_R16G16B16A16_SNORM,
+            DXGI_FORMAT_R16G16B16A16_SINT,
+            DXGI_FORMAT_R32G32_TYPELESS,
+            DXGI_FORMAT_R32G32_FLOAT,
+            DXGI_FORMAT_R32G32_UINT,
+            DXGI_FORMAT_R32G32_SINT,
+            DXGI_FORMAT_R32G8X24_TYPELESS,
+            DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
+            DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS,
+            DXGI_FORMAT_X32_TYPELESS_G8X24_UINT,
+            DXGI_FORMAT_R10G10B10A2_TYPELESS,
+            DXGI_FORMAT_R10G10B10A2_UNORM,
+            DXGI_FORMAT_R10G10B10A2_UINT,
+            DXGI_FORMAT_R11G11B10_FLOAT,
+            DXGI_FORMAT_R8G8B8A8_TYPELESS,
+            DXGI_FORMAT_R8G8B8A8_UNORM,
+            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+            DXGI_FORMAT_R8G8B8A8_UINT,
+            DXGI_FORMAT_R8G8B8A8_SNORM,
+            DXGI_FORMAT_R8G8B8A8_SINT,
+            DXGI_FORMAT_R16G16_TYPELESS,
+            DXGI_FORMAT_R16G16_FLOAT,
+            DXGI_FORMAT_R16G16_UNORM,
+            DXGI_FORMAT_R16G16_UINT,
+            DXGI_FORMAT_R16G16_SNORM,
+            DXGI_FORMAT_R16G16_SINT,
+            DXGI_FORMAT_R32_TYPELESS,
+            DXGI_FORMAT_D32_FLOAT,
+            DXGI_FORMAT_R32_FLOAT,
+            DXGI_FORMAT_R32_UINT,
+            DXGI_FORMAT_R32_SINT,
+            DXGI_FORMAT_R24G8_TYPELESS,
+            DXGI_FORMAT_D24_UNORM_S8_UINT,
+            DXGI_FORMAT_R24_UNORM_X8_TYPELESS,
+            DXGI_FORMAT_X24_TYPELESS_G8_UINT,
+            DXGI_FORMAT_R8G8_TYPELESS,
+            DXGI_FORMAT_R8G8_UNORM,
+            DXGI_FORMAT_R8G8_UINT,
+            DXGI_FORMAT_R8G8_SNORM,
+            DXGI_FORMAT_R8G8_SINT,
+            DXGI_FORMAT_R16_TYPELESS,
+            DXGI_FORMAT_R16_FLOAT,
+            DXGI_FORMAT_D16_UNORM,
+            DXGI_FORMAT_R16_UNORM,
+            DXGI_FORMAT_R16_UINT,
+            DXGI_FORMAT_R16_SNORM,
+            DXGI_FORMAT_R16_SINT,
+            DXGI_FORMAT_R8_TYPELESS,
+            DXGI_FORMAT_R8_UNORM,
+            DXGI_FORMAT_R8_UINT,
+            DXGI_FORMAT_R8_SNORM,
+            DXGI_FORMAT_R8_SINT,
+            DXGI_FORMAT_A8_UNORM,
+            DXGI_FORMAT_R1_UNORM,
+            DXGI_FORMAT_R9G9B9E5_SHAREDEXP,
+            DXGI_FORMAT_R8G8_B8G8_UNORM,
+            DXGI_FORMAT_G8R8_G8B8_UNORM,
+            DXGI_FORMAT_BC1_TYPELESS,
+            DXGI_FORMAT_BC1_UNORM,
+            DXGI_FORMAT_BC1_UNORM_SRGB,
+            DXGI_FORMAT_BC2_TYPELESS,
+            DXGI_FORMAT_BC2_UNORM,
+            DXGI_FORMAT_BC2_UNORM_SRGB,
+            DXGI_FORMAT_BC3_TYPELESS,
+            DXGI_FORMAT_BC3_UNORM,
+            DXGI_FORMAT_BC3_UNORM_SRGB,
+            DXGI_FORMAT_BC4_TYPELESS,
+            DXGI_FORMAT_BC4_UNORM,
+            DXGI_FORMAT_BC4_SNORM,
+            DXGI_FORMAT_BC5_TYPELESS,
+            DXGI_FORMAT_BC5_UNORM,
+            DXGI_FORMAT_BC5_SNORM,
+            DXGI_FORMAT_B5G6R5_UNORM,
+            DXGI_FORMAT_B5G5R5A1_UNORM,
+            DXGI_FORMAT_B8G8R8A8_UNORM,
+            DXGI_FORMAT_B8G8R8X8_UNORM,
+            DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM,
+            DXGI_FORMAT_B8G8R8A8_TYPELESS,
+            DXGI_FORMAT_B8G8R8A8_UNORM_SRGB,
+            DXGI_FORMAT_B8G8R8X8_TYPELESS,
+            DXGI_FORMAT_B8G8R8X8_UNORM_SRGB,
+            DXGI_FORMAT_BC6H_TYPELESS,
+            DXGI_FORMAT_BC6H_UF16,
+            DXGI_FORMAT_BC6H_SF16,
+            DXGI_FORMAT_BC7_TYPELESS,
+            DXGI_FORMAT_BC7_UNORM,
+            DXGI_FORMAT_BC7_UNORM_SRGB,
+            DXGI_FORMAT_AYUV,
+            DXGI_FORMAT_Y410,
+            DXGI_FORMAT_Y416,
+            DXGI_FORMAT_NV12,
+            DXGI_FORMAT_P010,
+            DXGI_FORMAT_P016,
+            DXGI_FORMAT_420_OPAQUE,
+            DXGI_FORMAT_YUY2,
+            DXGI_FORMAT_Y210,
+            DXGI_FORMAT_Y216,
+            DXGI_FORMAT_NV11,
+            DXGI_FORMAT_AI44,
+            DXGI_FORMAT_IA44,
+            DXGI_FORMAT_P8,
+            DXGI_FORMAT_A8P8,
+            DXGI_FORMAT_B4G4R4A4_UNORM,
+            DXGI_FORMAT_P208,
+            DXGI_FORMAT_V208,
+            DXGI_FORMAT_V408,
+            DXGI_FORMAT_SAMPLER_FEEDBACK_MIN_MIP_OPAQUE,
+            DXGI_FORMAT_SAMPLER_FEEDBACK_MIP_REGION_USED_OPAQUE,
+            DXGI_FORMAT_FORCE_UINT
+        }
+
+        static Dictionary<MHW_TEX_FORMAT, string> FormatTagMap = new Dictionary<MHW_TEX_FORMAT, string>() {
+            {MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN, "UNKN_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "RGB_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "SRGB_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM,"DXT1L_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB,"BC1S_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM, "BC4_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC5_UNORM, "BC5_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16, "BC6_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_TYPELESS, "BC7T_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, "BC7L_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, "BC7S_"}
+        };
+
+        static Dictionary<MHW_TEX_FORMAT, string> FormatMagicMap = new Dictionary<MHW_TEX_FORMAT, string>() {
+            {MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN, "UNKN"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM,"DXT1"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB,"DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM, "BC4U"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC5_UNORM, "BC5U"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_TYPELESS, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, "DX10"}
+        };
+
+        static List<MHW_TEX_FORMAT> TexWith4Bpp = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM };
+        static List<MHW_TEX_FORMAT> TexOfNewDDS = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC7_TYPELESS, MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16 };
 
         static int Main(string[] args)
         {
@@ -51,6 +214,7 @@ namespace Tex2Dds
 
                     using (BinaryReader reader = new BinaryReader(File.OpenRead(arg)))
                     {
+                        
                         int magicNumber = reader.ReadInt32();
                         if (magicNumber != MagicNumberTex)
                         {
@@ -77,67 +241,33 @@ namespace Tex2Dds
 
                         reader.BaseStream.Position = offset;
 
-                        uint internalFormat;
                         string typeMagic = "";
                         string compresstype = "";
-                        switch (type)
-                        {
-                            case 0x16:
-                                internalFormat = 0x83F1; // COMPRESSED_RGBA_S3TC_DXT1_EXT
-                                typeMagic = "DXT1";
-                                compresstype = "DXT1_";
+                        DXGI_FORMAT ddsformat = DXGI_FORMAT.DXGI_FORMAT_UNKNOWN;
+                        MHW_TEX_FORMAT texformat = MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN;
+                        Array knownFormats = Enum.GetValues(typeof(MHW_TEX_FORMAT));
+                        foreach (int known in knownFormats) {
+                            if (known == type) {
+                                ddsformat = (DXGI_FORMAT)Enum.Parse(typeof(DXGI_FORMAT), Enum.GetName(typeof(MHW_TEX_FORMAT), type));
+                                texformat = (MHW_TEX_FORMAT)type;
+                                typeMagic = FormatMagicMap[texformat];
+                                compresstype = FormatTagMap[texformat];
                                 break;
-                            case 0x17:
-                                internalFormat = 0x83F1; // COMPRESSED_RGBA_S3TC_DXT1_EXT
-                                typeMagic = "DXT1";
-                                compresstype = "DXT1_";
-                                break;
-                            case 0x18:
-                                internalFormat = 0x8DBB; //BC4U
-                                typeMagic = "BC4U";
-                                compresstype = "BC4_";
-                                break;
-                            case 0x1A:
-                                internalFormat = 0x8DBD; // COMPRESSED_RG_RGTC2
-                                typeMagic = "BC5U";
-                                compresstype = "BC5_";
-                                break;
-                            case 0x1c:
-                                internalFormat = 0x8E8F;
-                                typeMagic = "DX10";
-                                compresstype = "BC6H_";
-                                break;
-                            case 0x1d:
-                            case 0x1e:
-                            case 0x1f:
-                                internalFormat = 0x8E8C; // COMPRESSED_RGBA_BPTC_UNORM_ARB
-                                typeMagic = "DX10";
-                                compresstype = "BC7_";
-                                break;
-                            case 0x7:
-                                internalFormat = 0x57; // DXGI_FORMAT_B8G8R8A8_UNORM,
-                                typeMagic = "DX10";
-                                compresstype = "R8G8B8A8_";
-                                break;
-                            default:
-                                internalFormat = 0;
-                                break;
+                            }
                         }
 
-                        if (internalFormat == 0)
+                        if (texformat == MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN)
                         {
                             Console.Error.WriteLine("ERROR: Unknown TEX format {0}. " + arg, type);
                             Console.ReadLine();
                             continue;
                         }
-                        string outfile_name = compresstype + Path.GetFileName(arg);
-                        //string outfile_name = Path.GetFileName(arg);
-
+                        string outfile_name = Program.FormatTagMap[texformat] + Path.GetFileName(arg);
+                        
                         string destPath = Path.GetFullPath(Path.ChangeExtension(Path.GetDirectoryName(arg) + "\\" + outfile_name, ".dds"));
                         Directory.CreateDirectory(Path.GetDirectoryName(destPath));
                         byte[] data;
-                        if (type != 0x1c) data = reader.ReadBytes(size * 2);
-                        else data = reader.ReadBytes(size * 12);
+                        data = reader.ReadBytes((int)new FileInfo(arg).Length);
 
                         using (FileStream fsWrite = new FileStream(destPath, FileMode.Create))
                         {
@@ -145,45 +275,38 @@ namespace Tex2Dds
                             fsWrite.Write(WMagicNumberHead, 0, WMagicNumberHead.Length);
                             fsWrite.Write(Program.intToBytesLittle(height), 0, 4);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 4);
-                            if (!typeMagic.Equals("DXT"))
+                            if (TexWith4Bpp.Contains(texformat))
                             {
-                                fsWrite.Write(Program.intToBytesLittle(width * height), 0, 4);
+                                //4bpp texture size
+                                fsWrite.Write(Program.intToBytesLittle(width * height / 2), 0, 4);
                             }
                             else
                             {
-                                fsWrite.Write(Program.intToBytesLittle(width * height / 2), 0, 4);
+                                //8bpp texture size
+                                fsWrite.Write(Program.intToBytesLittle(width * height), 0, 4);
                             }
                             fsWrite.Write(Program.intToBytesLittle(1), 0, 4);
                             fsWrite.Write(Program.intToBytesLittle(mipMapCount), 0, 4);
-                            byte[] EmptyByte11 = Program.StringToByteArray(Empty11);
+                            byte[] EmptyByte11 = Program.intToBytesLittle(0, 11);
                             fsWrite.Write(EmptyByte11, 0, EmptyByte11.Length);
                             fsWrite.Write(Program.intToBytesLittle(32), 0, 4);
                             fsWrite.Write(Program.intToBytesLittle(4), 0, 4);
                             byte[] typeMagicBytes = Program.AsciiStringToByteArray(typeMagic);
                             fsWrite.Write(typeMagicBytes, 0, typeMagicBytes.Length);
-                            byte[] EmptyByte5 = Program.StringToByteArray(Empty5);
+                            byte[] EmptyByte5 = Program.intToBytesLittle(0, 5);
                             fsWrite.Write(EmptyByte5, 0, EmptyByte5.Length);
                             byte[] CompressOptionByte = Program.StringToByteArray(CompressOption);
                             fsWrite.Write(CompressOptionByte, 0, CompressOptionByte.Length);
-                            byte[] EmptyByte4 = Program.StringToByteArray(Empty4);
+                            byte[] EmptyByte4 = Program.intToBytesLittle(0, 4);
                             fsWrite.Write(EmptyByte4, 0, EmptyByte4.Length);
                             if (typeMagic.Equals("DX10"))
                             {
-                                string ArbNum = bc7Num;
-                                if (internalFormat == 0x8e8f)
-                                {
-                                    ArbNum = bc6hNum;
-                                }
-                                else if (internalFormat == 0x57) {
-                                    ArbNum = rgbaNum;
-                                }
-                                byte[] ArbNumByte = Program.StringToByteArray(ArbNum);
+                                fsWrite.Write(Program.intToBytesLittle((int)ddsformat), 0, 4);
+                                byte[] ArbNumByte = Program.StringToByteArray(dx10FixedFlags);
                                 fsWrite.Write(ArbNumByte, 0, ArbNumByte.Length);
                             }
                             fsWrite.Write(data, 0, data.Length);
-
                         }
-
                     }
                 }
                 else if (Path.GetExtension(arg).Equals(".dds"))
@@ -204,7 +327,10 @@ namespace Tex2Dds
                             Console.Error.WriteLine("ERROR: {0} is not a valid dds file.", magicNumber);
                             continue;
                         }
-                        reader.BaseStream.Position = 0x0C;
+                        reader.BaseStream.Position = 0x8;
+                        int ddsflag = reader.ReadInt32();
+                        bool isRaw = false;
+                        if ((ddsflag & 0x8) == 0x8) isRaw = true;
                         int height = reader.ReadInt32();
                         int width = reader.ReadInt32();
                         reader.BaseStream.Position = 0x1C;
@@ -212,30 +338,44 @@ namespace Tex2Dds
                         reader.BaseStream.Position = 0x54;
                         int filetypecode = reader.ReadInt32();
                         reader.BaseStream.Position = 0x80;
-                        int innerfiletype = reader.ReadInt32();
-                        int filetype = 0;
+                        int ddsformatint = reader.ReadInt32();
+                        DXGI_FORMAT ddsformat = (DXGI_FORMAT)ddsformatint;
+                        MHW_TEX_FORMAT texformat = MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN;
                         switch (filetypecode)
                         {
+                            //DX10
                             case 0x30315844:
-                                if (innerfiletype <= 99 && innerfiletype >= 97) { filetype = 0x1f; }
-                                else if (innerfiletype <= 96 && innerfiletype >= 94) { filetype = 0x1c; }
+                                string formatname = Enum.GetName(typeof(DXGI_FORMAT), ddsformatint);
+                                foreach (string name in Enum.GetNames(typeof(MHW_TEX_FORMAT))) {
+                                    if (formatname.Equals(name)) {
+                                        texformat = (MHW_TEX_FORMAT)Enum.Parse(typeof(MHW_TEX_FORMAT), formatname);
+                                    }
+                                }
+                                texformat = (MHW_TEX_FORMAT)Enum.Parse(typeof(MHW_TEX_FORMAT), Enum.GetName(typeof(DXGI_FORMAT), ddsformatint));
                                 break;
+                            //DXT1
                             case 0x31545844:
-                                filetype = 0x17;
+                                texformat = MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM;
                                 break;
+                            //BC4U
                             case 0x55344342:
-                                filetype = 0x18;
+                                texformat = MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM;
                                 break;
+                            //DXT5 BC5U
                             case 0x55354342:
                             case 0x32495441:
-                                filetype = 0x1a;
+                                texformat = MHW_TEX_FORMAT.DXGI_FORMAT_BC5_UNORM;
+                                break;
+                            //Raw
+                            case 0x0:
+                                if(isRaw)texformat = MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM;
                                 break;
                         }
 
-                        reader.BaseStream.Position = (filetype == 0x1f || filetype == 0x1c) ? 0x94 : 0x80;
-                        byte[] data = reader.ReadBytes(width * height * 2);
+                        reader.BaseStream.Position = (FormatMagicMap[texformat].Equals("DX10") && !isRaw) ? 0x94 : 0x80;
+                        byte[] data = reader.ReadBytes((int)new FileInfo(arg).Length);
 
-                        if (filetype == 0)
+                        if (texformat == MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN)
                         {
                             Console.Error.WriteLine("ERROR: Unsupported DDS format {0}. " + arg, filetypecode);
                             Console.ReadLine();
@@ -249,10 +389,10 @@ namespace Tex2Dds
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 4);
                             fsWrite.Write(Program.intToBytesLittle(height), 0, 4);
                             fsWrite.Write(Program.intToBytesLittle(1), 0, 4);
-                            fsWrite.Write(Program.intToBytesLittle(filetype), 0, 4);
-                            byte[] WTexSolid = Program.StringToByteArray(TexSolid);
+                            fsWrite.Write(Program.intToBytesLittle((int)texformat), 0, 4);
+                            byte[] WTexSolid = Program.StringToByteArray(TexFixedUnkn);
                             fsWrite.Write(WTexSolid, 0, WTexSolid.Length);
-                            if (filetype == 0x1f)
+                            if (TexOfNewDDS.Contains(texformat))
                             {
                                 fsWrite.Write(Program.intToBytesLittle(1), 0, 4);
                             }
@@ -260,24 +400,18 @@ namespace Tex2Dds
                             {
                                 fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
                             }
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                            byte[] WFF40 = Program.StringToByteArray(FF40);
-                            fsWrite.Write(WFF40, 0, WFF40.Length);
+                            fsWrite.Write(Program.intToBytesLittle(0, 4), 0, 4 * 4);
+                            fsWrite.Write(Program.intToBytesLittle(-1, 8), 0, 4 * 8);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 4);
                             fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
+                            fsWrite.Write(Program.intToBytesLittle(0, 2), 0, 4 * 2);
                             fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
+                            fsWrite.Write(Program.intToBytesLittle(0, 2), 0, 4 * 2);
                             fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                            fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                            fsWrite.Write(Program.StringToByteArray(Empty6), 0, 6 * 4);
+                            fsWrite.Write(Program.intToBytesLittle(0, 8), 0, 4 * 8);
                             int cur_width = width;
                             int cur_height = height;
 
@@ -286,11 +420,9 @@ namespace Tex2Dds
                             {
                                 fsWrite.Write(Program.intToBytesLittle(base_loc), 0, 4);
                                 fsWrite.Write(Program.intToBytesLittle(0), 0, 4);
-                                if (filetype == 0x17)
+                                if (TexWith4Bpp.Contains(texformat))
                                 {
-                                    int cur_size = cur_width * cur_height / 2;
-                                    if (cur_size < 0x10) cur_size = 0x10;
-                                    base_loc = base_loc + cur_size;
+                                    base_loc = base_loc + cur_width * cur_height / 2;
                                 }
                                 else
                                 {
@@ -336,13 +468,23 @@ namespace Tex2Dds
             return ret;
         }
 
-        public static byte[] intToBytesLittle(int value)
+        public static byte[] intToBytesLittle(int value, int repeat = 1)
         {
             byte[] src = new byte[4];
             src[3] = (byte)((value >> 24) & 0xFF);
             src[2] = (byte)((value >> 16) & 0xFF);
             src[1] = (byte)((value >> 8) & 0xFF);
             src[0] = (byte)(value & 0xFF);
+            if (repeat > 1) {
+                byte[] repeatsrc = new byte[4 * repeat];
+                for (int i = 0; i < repeat; i++) {
+                    repeatsrc[i * 4] = src[0];
+                    repeatsrc[i * 4 + 1] = src[1];
+                    repeatsrc[i * 4 + 2] = src[2];
+                    repeatsrc[i * 4 + 3] = src[3];
+                }
+                return repeatsrc;
+            }
             return src;
         }
     }
