@@ -13,14 +13,14 @@ namespace Tex2Dds
         const string WMagicNumberDds = "444453207C00000007100A00";
         const string WMagicNumberTex = "5445580010000000000000000000000002000000";
         const string CompressOption = "08104000";
-        const string dx10FixedFlags = "03000000000000000100000000000000";
+        const string DX10FixedFlags = "03000000000000000100000000000000";
         const string TexFixedUnkn = "01000000000000000000000000000000FFFFFFFF0000000000000000";
 
         enum MHW_TEX_FORMAT{
             DXGI_FORMAT_UNKNOWN = 0,
             DXGI_FORMAT_R8G8B8A8_UNORM = 7,
             DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,//Not sure. The textures are weird.
-            DXGI_FORMAT_R8_UNORM = 19,
+            DXGI_FORMAT_R8G8_UNORM = 19,
             DXGI_FORMAT_BC1_UNORM = 22,
             DXGI_FORMAT_BC1_UNORM_SRGB = 23,
             DXGI_FORMAT_BC4_UNORM = 24,
@@ -158,9 +158,9 @@ namespace Tex2Dds
 
         static Dictionary<MHW_TEX_FORMAT, string> FormatTagMap = new Dictionary<MHW_TEX_FORMAT, string>() {
             {MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN, "UNKN_"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "R8G8B8_"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "SR8G8B8_"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_R8_UNORM, "R8_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "R8G8B8A8_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "SR8G8B8A8_"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8_UNORM, "R8G8_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM,"DXT1L_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB,"BC1S_"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM, "BC4_"},
@@ -174,7 +174,7 @@ namespace Tex2Dds
             {MHW_TEX_FORMAT.DXGI_FORMAT_UNKNOWN, "UNKN"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM, "DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, "DX10"},
-            {MHW_TEX_FORMAT.DXGI_FORMAT_R8_UNORM, "DX10"},
+            {MHW_TEX_FORMAT.DXGI_FORMAT_R8G8_UNORM, "DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM,"DXT1"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB,"DX10"},
             {MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM, "BC4U"},
@@ -185,6 +185,7 @@ namespace Tex2Dds
         };
 
         static List<MHW_TEX_FORMAT> TexWith4Bpp = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC1_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC4_UNORM };
+        static List<MHW_TEX_FORMAT> TexWith16Bpp = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_R8G8_UNORM };
         static List<MHW_TEX_FORMAT> TexOfNewDDS = new List<MHW_TEX_FORMAT> { MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM, MHW_TEX_FORMAT.DXGI_FORMAT_BC7_UNORM_SRGB, MHW_TEX_FORMAT.DXGI_FORMAT_BC6H_UF16 };
 
         static int Main(string[] args)
@@ -279,6 +280,11 @@ namespace Tex2Dds
                                 //4bpp texture size
                                 fsWrite.Write(Program.intToBytesLittle(width * height / 2), 0, 4);
                             }
+                            else if (TexWith16Bpp.Contains(texformat))
+                            {
+                                //16bpp texture size
+                                fsWrite.Write(Program.intToBytesLittle(width * height * 2), 0, 4);
+                            }
                             else
                             {
                                 //8bpp texture size
@@ -301,7 +307,7 @@ namespace Tex2Dds
                             if (typeMagic.Equals("DX10"))
                             {
                                 fsWrite.Write(Program.intToBytesLittle((int)ddsformat), 0, 4);
-                                byte[] ArbNumByte = Program.StringToByteArray(dx10FixedFlags);
+                                byte[] ArbNumByte = Program.StringToByteArray(DX10FixedFlags);
                                 fsWrite.Write(ArbNumByte, 0, ArbNumByte.Length);
                             }
                             fsWrite.Write(data, 0, data.Length);
@@ -402,7 +408,7 @@ namespace Tex2Dds
                             fsWrite.Write(Program.intToBytesLittle(0, 4), 0, 4 * 4);
                             fsWrite.Write(Program.intToBytesLittle(-1, 8), 0, 4 * 8);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 4);
-                            bool isFullWidth = isRaw || texformat == MHW_TEX_FORMAT.DXGI_FORMAT_R8_UNORM;
+                            bool isFullWidth = isRaw || texformat == MHW_TEX_FORMAT.DXGI_FORMAT_R8G8_UNORM;
                             if(isFullWidth) fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
                             else fsWrite.Write(Program.intToBytesLittle(width / 2), 0, 2);
                             fsWrite.Write(Program.intToBytesLittle(width), 0, 2);
@@ -428,7 +434,11 @@ namespace Tex2Dds
                                 {
                                     base_loc = base_loc + cur_width * cur_height / 2;
                                 }
-                                else if (isRaw) {
+                                else if (TexWith16Bpp.Contains(texformat)) {
+                                    base_loc = base_loc + cur_width * cur_height * 2;
+                                }
+                                else if (isRaw)
+                                {
                                     base_loc = base_loc + cur_width * cur_height * 4;
                                 }
                                 else
