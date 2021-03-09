@@ -19,7 +19,7 @@ namespace Tex2Dds
         enum MHW_TEX_FORMAT{
             DXGI_FORMAT_UNKNOWN = 0,
             DXGI_FORMAT_R8G8B8A8_UNORM = 7,
-            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,//Not sure. The textures are weird.
+            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB = 9,//LUTs
             DXGI_FORMAT_R8G8_UNORM = 19,
             DXGI_FORMAT_BC1_UNORM = 22,
             DXGI_FORMAT_BC1_UNORM_SRGB = 23,
